@@ -25,10 +25,10 @@ class MapaController extends Controller
 
     public function datatable()
     {
-        sleep(5);
+
         $contract_id = filter_input(INPUT_GET, 'contract_id', FILTER_VALIDATE_INT);
 
-        Editor::inst( $this->db, 'mapas' )
+        Editor::inst( $this->db, 'mapas', 'id' )
             ->fields(
                 Field::inst( 'mapas.id' ),
                 Field::inst( 'mapas.contract_id' )

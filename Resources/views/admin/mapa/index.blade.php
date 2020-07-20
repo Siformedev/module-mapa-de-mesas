@@ -40,7 +40,7 @@
                                 <table id="example" class="table table-hover nowrap dataTable dtr-inline">
                                     <thead>
                                     <tr>
-                                        <th>Id</th>
+                                        <th>#</th>
                                         <th>Nome</th>
                                         <th>Contrato</th>
                                         <th>Evento</th>
@@ -187,7 +187,9 @@
                     }
                 },
                 columns: [
-                    { data: "mapas.id" },
+                    { data: null, render: function (row){
+                            return `<a href="mapa/${row.mapas.id}/manutencao" class="btn btn-info btn-m"><i class="glyphicon glyphicon-wrench"></i></a>`;
+                    } },
                     { data: "mapas.nome" },
                     { data: "contracts.name" },
                     { data: "events.name" },
@@ -225,5 +227,9 @@
             })
         } );
     </script>
+
+    <script type="text/javascript" charset="utf-8" src="//cdn.datatables.net/v/bs-3.3.7/moment-2.18.1/jszip-2.5.0/pdfmake-0.1.36/dt-1.10.18/af-2.3.3/b-1.5.6/b-colvis-1.5.6/b-html5-1.5.6/b-print-1.5.6/cr-1.5.0/fc-3.2.5/fh-3.1.4/kt-2.5.0/r-2.2.2/rg-1.1.0/rr-1.2.4/sc-2.0.0/sl-1.3.0/datatables.min.js"></script>
+    <script type="text/javascript" src="{{ asset('assets/datatable-editor/js/dataTables.editor.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('assets/datatable-editor/js/editor.bootstrap.min.js') }}"></script>
 
 @endsection
