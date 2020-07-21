@@ -19,10 +19,12 @@ class CreateMapasTable extends Migration
             $table->foreign('contract_id')->references('id')->on('contracts');
             $table->integer('event_id')->unsigned();
             $table->foreign('event_id')->references('id')->on('events');
+            $table->integer('config_id')->unsigned();
+            $table->foreign('config_id')->references('id')->on('mesas_tipo_configs');
             $table->string('nome');
             $table->string('imagem')->nullable();
-            $table->integer('imagem_x')->nullable();
-            $table->integer('imagem_y')->nullable();
+            $table->integer('imagem_x')->default(0);
+            $table->integer('imagem_y')->default(0);
             $table->datetime('data_inicio')->nullable();
             $table->datetime('data_fim')->nullable();
             $table->boolean('status');

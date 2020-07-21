@@ -9,45 +9,32 @@
                     <div class="panel-heading" style="padding: 15px;">
                         <div class="row">
                             <div class="col-md-12">
-                                <h3>MAPAS</h3>
+                                <h3>MESAS TIPO CONFIG</h3>
                                 <hr>
                             </div>
                         </div>
                     </div>
                     <div class="panel-body">
                         <div class="row">
-                            <div class="col-sm-12">
-                                <h6>FILTROS</h6>
-                                <div class="row">
-                                <div class="col-sm-3 form-group">
-                                    <label>Contrato</label>
-                                    <select class="form-control" name="contract_id" id="contract_id">
-                                        <option value="0">Todos</option>
-                                        @foreach(\App\Contract::all() as $contrato)
-                                            <option value="{{$contrato->id}}">{{$contrato->name}}</option>
-                                        @endforeach
-                                    </select>
-
-                                </div>
-                                </div>
-                                <hr>
-                            </div>
-
-                        </div>
-                        <div class="row">
                             <div class="col-sm-12 col-md-12">
 
-                                <table id="example" class="table table-hover nowrap dataTable dtr-inline">
+                                <table id="mesas" class="table table-hover nowrap dataTable dtr-inline">
                                     <thead>
                                     <tr>
-                                        <th>#</th>
+{{--                                        <th>#</th>--}}
+                                        <th>ID</th>
                                         <th>Nome</th>
-                                        <th>Contrato</th>
-                                        <th>Evento</th>
-                                        <th>Data Inicio</th>
-                                        <th>Data Fim</th>
-                                        <th>Config</th>
-                                        <th>Status</th>
+                                        <th>Width</th>
+                                        <th>Height</th>
+                                        <th>Radius</th>
+                                        <th>Line Height</th>
+                                        <th>Font Size</th>
+                                        <th>BG Color Livre</th>
+                                        <th>Texto Color Livre</th>
+                                        <th>BG Color Ocupada</th>
+                                        <th>Texto Color Ocupada</th>
+                                        <th>BG Color Bloqueada</th>
+                                        <th>Texto Color Bloqueada</th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -106,38 +93,38 @@
                     }
                 },
                 ajax: {
-                    url: '{{route('mapademesas.admin.mapa.datatable')}}',
+                    url: '{{route('mapademesas.admin.mesa-tipo-config.datatable')}}',
                     type: "POST",
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     }
                 },
-                table: '#example',
+                table: '#mesas',
                 fields: [
-                    { label: "Nome <font color=red>*</font>", name: "mapas.nome" },
-                    { label: "Contrato <font color=red>*</font>", name: "mapas.contract_id", type: "select" },
-                    { label: "Evento <font color=red>*</font>", name: "mapas.event_id", type: "select" },
-                    { label: "Data Início <font color=red>*</font>", name: "mapas.data_inicio", type: 'datetime', format: 'DD/MM/YYYY H:mm', },
-                    { label: "Data Fim <font color=red>*</font>", name: "mapas.data_fim", type: 'datetime', format: 'DD/MM/YYYY H:mm', },
-                    { label: "Tipo Config <font color=red>*</font>", name: "mapas.config_id", type: "select" },
-                    {
-                        label: "Status",
-                        name: "mapas.status",
-                        type:  "radio",
-                        options: [
-                            { label: "INATIVO", value: 0 },
-                            { label: "ATIVO",  value: 1 }
-                        ]
-                    }
+                    { label: "Nome <font color=red>*</font>", name: "mesas_tipo_configs.nome", attr: {type: 'text'} },
+                    { label: "Width <font color=red>*</font>", name: "mesas_tipo_configs.width",  attr: {type: 'number'}},
+                    { label: "Height <font color=red>*</font>", name: "mesas_tipo_configs.height",  attr: {type: 'number'} },
+                    { label: "Radius <font color=red>*</font>", name: "mesas_tipo_configs.radius",  attr: {type: 'number'} },
+                    { label: "line_height <font color=red>*</font>", name: "mesas_tipo_configs.line_height",  attr: {type: 'number'} },
+                    { label: "font_size <font color=red>*</font>", name: "mesas_tipo_configs.font_size",  attr: {type: 'number'} },
+                    { label: "background_color_livre <font color=red>*</font>", name: "mesas_tipo_configs.background_color_livre",  attr: {type: 'color', style: 'padding: 2px'} },
+                    { label: "color_livre <font color=red>*</font>", name: "mesas_tipo_configs.color_livre",  attr: {type: 'color', style: 'padding: 2px'} },
+                    { label: "background_color_ocupada <font color=red>*</font>", name: "mesas_tipo_configs.background_color_ocupada",  attr: {type: 'color', style: 'padding: 2px'} },
+                    { label: "color_ocupada <font color=red>*</font>", name: "mesas_tipo_configs.color_ocupada",  attr: {type: 'color', style: 'padding: 2px'} },
+                    { label: "background_color_reversada <font color=red>*</font>",  name: "mesas_tipo_configs.background_color_reversada", attr: {type: 'color', style: 'padding: 2px'} },
+                    { label: "color_reversada <font color=red>*</font>",  name: "mesas_tipo_configs.color_reversada", attr: {type: 'color', style: 'padding: 2px'} }
                 ]
             } );
 
-            const table = $('#example').DataTable({
+            editor.on('open', function (){
+            });
+
+            const table = $('#mesas').DataTable({
                 dom: "<'row'<'col-sm-4'l><'col-sm-4'B><'col-sm-4'f>>" +
                     "<'row'<'col-sm-12'tr>>" +
                     "<'row'<'col-sm-5'i><'col-sm-7'p>>",
                 ajax: {
-                    url: '{{route('mapademesas.admin.mapa.datatable')}}',
+                    url: '{{route('mapademesas.admin.mesa-tipo-config.datatable')}}',
                     type: "POST",
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -189,19 +176,22 @@
                     }
                 },
                 columns: [
-                    { data: null, render: function (row){
-                            return `<a href="mapa/${row.mapas.id}/manutencao" class="btn btn-info btn-m"><i class="glyphicon glyphicon-wrench"></i></a>`;
-                    } },
-                    { data: "mapas.nome" },
-                    { data: "contracts.name" },
-                    { data: "events.name" },
-                    { data: "mapas.data_inicio" },
-                    { data: "mapas.data_fim" },
+                    // { data: null, render: function (row){
+                    //         return `<a href="mapa/${row.mapas.id}/manutencao" class="btn btn-info btn-m"><i class="glyphicon glyphicon-wrench"></i></a>`;
+                    // } },
+                    { data: "mesas_tipo_configs.id" },
                     { data: "mesas_tipo_configs.nome" },
-                    { data: null, render: function ( val, type, row ) {
-                            return row.mapas.status ? 'ATIVO' : 'INATIVO';
-                        }
-                    }
+                    { data: "mesas_tipo_configs.width" },
+                    { data: "mesas_tipo_configs.height" },
+                    { data: "mesas_tipo_configs.radius" },
+                    { data: "mesas_tipo_configs.line_height" },
+                    { data: "mesas_tipo_configs.font_size" },
+                    { data: "mesas_tipo_configs.background_color_livre" },
+                    { data: "mesas_tipo_configs.color_livre" },
+                    { data: "mesas_tipo_configs.background_color_ocupada" },
+                    { data: "mesas_tipo_configs.color_ocupada" },
+                    { data: "mesas_tipo_configs.background_color_reversada" },
+                    { data: "mesas_tipo_configs.color_reversada" }
                 ],
                 buttons: [
                     { extend: "create", editor: editor },
@@ -223,11 +213,6 @@
             table.buttons()
                 .container()
                 .appendTo( $('.col-sm-6:eq(0)', table.table().container() ) );
-
-            $("#contract_id").change(e => {
-                const id = e.target.value;
-                table.ajax.url('{{route('mapademesas.admin.mapa.datatable')}}?contract_id=' + id).load();
-            })
         } );
     </script>
 

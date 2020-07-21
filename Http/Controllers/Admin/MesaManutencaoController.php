@@ -17,15 +17,26 @@ use
 use Illuminate\Support\Facades\DB;
 use Modules\MapaDeMesas\Entities\mapas;
 use Modules\MapaDeMesas\Entities\Mesa;
+use Modules\MapaDeMesas\Http\Traits\DatatableTrait;
 
 class MesaManutencaoController extends Controller
 {
+    use DatatableTrait;
 
     public function add(Mapas $id)
     {
         $mapa = $id;
         $ultimaMesa = Mesa::where('mapa_id', $mapa->id)->max('numero');
-        $numMesa = $ultimaMesa + 1;
+        $numMesa = $ultimaMesa++;
+
+        $mesas = Mesa::where('mapa_id', $mapa->id)->orderBy('numero')->get(['numero'])->pluck('numero')->toArray();
+        for($i=1; $i<=$ultimaMesa; $i++){
+            if(!in_array($i, $mesas)){
+                $numMesa = $i;
+                break;
+            }
+        }
+
         Mesa::create([
             'mapa_id' => $mapa->id,
             'numero' => $numMesa,
@@ -40,7 +51,7 @@ class MesaManutencaoController extends Controller
     public function listar(Mapas $id)
     {
         $mapa = $id;
-        $mesas = Mesa::where('mapa_id', $mapa->id)->get();
+        $mesas = Mesa::where('mapa_id', $mapa->id)->orderBy('numero', 'asc')->get();
         return $mesas;
     }
 
@@ -57,6 +68,16 @@ class MesaManutencaoController extends Controller
     {
         $mapa = $id;
         $mesa = Mesa::where('mapa_id', $mapa->id)->where('id', $mesa)->first();
+        $mesa->left = $left;
+        $mesa->save();
+        return ['success' => true];
+    }
+
+    public function editTopLeft(Mapas $id, $mesa, $top, $left)
+    {
+        $mapa = $id;
+        $mesa = Mesa::where('mapa_id', $mapa->id)->where('id', $mesa)->first();
+        $mesa->top = $top;
         $mesa->left = $left;
         $mesa->save();
         return ['success' => true];
