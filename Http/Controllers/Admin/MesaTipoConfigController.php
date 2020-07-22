@@ -27,6 +27,11 @@ class MesaTipoConfigController extends Controller
         return view('mapademesas::admin.mesa-tipo-config.index');
     }
 
+    public function actives()
+    {
+        return MesasTipoConfig::active()->get();
+    }
+
     public function datatable()
     {
 

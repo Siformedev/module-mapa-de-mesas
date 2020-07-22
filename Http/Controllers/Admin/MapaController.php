@@ -57,20 +57,12 @@ class MapaController extends Controller
                     ->setFormatter( Format::dateTime( 'd/m/Y H:i', 'Y-m-d H:i:s' ) )
                     ->Validator(Validate::notEmpty()),
 
-                Field::inst( 'mapas.config_id' )
-                    ->options( Options::inst()
-                        ->table( 'mesas_tipo_configs' )
-                        ->value( 'id' )
-                        ->label( 'nome' )
-                    )->Validator(Validate::notEmpty()),
-
                 Field::inst( 'mapas.status' )
                     ->Validator(Validate::boolean()),
 
                 /* LEFT JOIN  */
                 Field::inst( 'contracts.name' ),
-                Field::inst( 'events.name' ),
-                Field::inst( 'mesas_tipo_configs.nome' )
+                Field::inst( 'events.name' )
             )
             ->where(function ($q) use ($contract_id){
                 if($contract_id){
@@ -80,9 +72,7 @@ class MapaController extends Controller
             })
             ->leftJoin('contracts', 'contracts.id', '=', 'mapas.contract_id')
             ->leftJoin('events', 'events.id', '=', 'mapas.event_id')
-            ->leftJoin('mesas_tipo_configs', 'mesas_tipo_configs.id', '=', 'mapas.config_id')
             ->process( $_POST )
-            ->debug(true)
             ->json();
     }
 }

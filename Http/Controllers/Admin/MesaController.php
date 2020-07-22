@@ -49,6 +49,13 @@ class MesaController extends Controller
                         })
                     )->Validator(Validate::notEmpty()),
 
+                Field::inst( 'mesas.config_id' )
+                    ->options( Options::inst()
+                        ->table( 'mesas_tipo_configs' )
+                        ->value( 'id' )
+                        ->label( 'nome' )
+                    )->Validator(Validate::notEmpty()),
+
                 Field::inst( 'mesas.top' )
                     ->Validator(Validate::numeric())
                     ->Validator(Validate::notEmpty()),
@@ -66,7 +73,9 @@ class MesaController extends Controller
                     ->Validator(Validate::notEmpty()),
 
                 /* LEFT JOIN  */
-                Field::inst( 'mapas.nome' )
+                Field::inst( 'mapas.nome' ),
+                Field::inst( 'mesas_tipo_configs.nome' )
+
             )
             ->where(function ($q) use ($mapa_id){
                 if($mapa_id){
@@ -75,6 +84,7 @@ class MesaController extends Controller
 
             })
             ->leftJoin('mapas', 'mapas.id', '=', 'mesas.mapa_id')
+            ->leftJoin('mesas_tipo_configs', 'mesas_tipo_configs.id', '=', 'mesas.config_id')
             ->process( $_POST )
             ->debug(true)
             ->json();

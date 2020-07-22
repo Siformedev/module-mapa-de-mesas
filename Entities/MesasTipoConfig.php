@@ -18,6 +18,12 @@ class MesasTipoConfig extends Model
         'background_color_reversada',
         'color_livre',
         'color_livrcolor_ocupada',
-        'color_reversada'
+        'color_reversada',
+        'active'
     ];
+
+    public function scopeActive($query)
+    {
+        return $query->where('active', 1);
+    }
 }

@@ -23,36 +23,30 @@ class MesaManutencaoController extends Controller
 {
     use DatatableTrait;
 
-    public function add(Mapas $id)
+    public function add(Mapas $id, $top, $left, $config = 0)
     {
         $mapa = $id;
-        $ultimaMesa = Mesa::where('mapa_id', $mapa->id)->max('numero');
-        $numMesa = $ultimaMesa++;
+        $numMesa = $this->proximaMesa($mapa);
 
-        $mesas = Mesa::where('mapa_id', $mapa->id)->orderBy('numero')->get(['numero'])->pluck('numero')->toArray();
-        for($i=1; $i<=$ultimaMesa; $i++){
-            if(!in_array($i, $mesas)){
-                $numMesa = $i;
-                break;
-            }
-        }
-
-        Mesa::create([
+        $mesa = Mesa::create([
             'mapa_id' => $mapa->id,
             'numero' => $numMesa,
-            'top' => rand(10, 30),
-            'left' => rand(10, 30),
+            'top' => $top,
+            'left' => $left,
+            'config_id' => $config,
             'status' => 1,
         ]);
 
-        return ['success' => true];
+        $mesa->config;
+        return $mesa;
     }
 
     public function listar(Mapas $id)
     {
         $mapa = $id;
-        $mesas = Mesa::where('mapa_id', $mapa->id)->orderBy('numero', 'asc')->get();
-        return $mesas;
+        $mesas = Mesa::with('config')->where('mapa_id', $mapa->id)->orderBy('numero', 'asc')->get();
+        $proximaMesa = $this->proximaMesa($mapa);
+        return ['mesas' => $mesas, 'proxima' => $proximaMesa];
     }
 
     public function editTop(Mapas $id, $mesa, $top)
@@ -97,6 +91,21 @@ class MesaManutencaoController extends Controller
         $mesa->bloqueada = $bloqueada;
         $mesa->save();
         return $mesa;
+    }
+
+    private function proximaMesa(Mapas $mapa)
+    {
+        $ultimaMesa = Mesa::where('mapa_id', $mapa->id)->max('numero');
+        $numMesa = $ultimaMesa++;
+
+        $mesas = Mesa::where('mapa_id', $mapa->id)->orderBy('numero')->get(['numero'])->pluck('numero')->toArray();
+        for($i=1; $i<=$ultimaMesa; $i++){
+            if(!in_array($i, $mesas)){
+                $numMesa = $i;
+                break;
+            }
+        }
+        return $numMesa;
     }
 
 }

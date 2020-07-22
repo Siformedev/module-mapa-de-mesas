@@ -43,6 +43,7 @@
 {{--                                        <th>#</th>--}}
                                         <th>Mapa</th>
                                         <th>Número</th>
+                                        <th>Config</th>
                                         <th>Top</th>
                                         <th>Left</th>
                                         <th>Bloqueada</th>
@@ -114,6 +115,7 @@
                 table: '#mesas',
                 fields: [
                     { label: "Número <font color=red>*</font>", name: "mesas.numero", attr: {type: 'number'} },
+                    { label: "Tipo Config <font color=red>*</font>", name: "mesas.config_id", type: "select" },
                     { label: "Mapa <font color=red>*</font>", name: "mesas.mapa_id", type: "select" },
                     { label: "Top <font color=red>*</font>",  name: "mesas.top", attr: {type: 'number'} },
                     { label: "Left <font color=red>*</font>",  name: "mesas.left", attr: {type: 'number'} },
@@ -200,6 +202,7 @@
                     // } },
                     { data: "mapas.nome" },
                     { data: "mesas.numero" },
+                    { data: "mesas_tipo_configs.nome" },
                     { data: "mesas.top" },
                     { data: "mesas.left" },
                     { data: null, render: function ( val, type, row ) {

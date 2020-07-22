@@ -46,7 +46,6 @@
                                         <th>Evento</th>
                                         <th>Data Inicio</th>
                                         <th>Data Fim</th>
-                                        <th>Config</th>
                                         <th>Status</th>
                                     </tr>
                                     </thead>
@@ -119,7 +118,6 @@
                     { label: "Evento <font color=red>*</font>", name: "mapas.event_id", type: "select" },
                     { label: "Data Início <font color=red>*</font>", name: "mapas.data_inicio", type: 'datetime', format: 'DD/MM/YYYY H:mm', },
                     { label: "Data Fim <font color=red>*</font>", name: "mapas.data_fim", type: 'datetime', format: 'DD/MM/YYYY H:mm', },
-                    { label: "Tipo Config <font color=red>*</font>", name: "mapas.config_id", type: "select" },
                     {
                         label: "Status",
                         name: "mapas.status",
@@ -197,7 +195,6 @@
                     { data: "events.name" },
                     { data: "mapas.data_inicio" },
                     { data: "mapas.data_fim" },
-                    { data: "mesas_tipo_configs.nome" },
                     { data: null, render: function ( val, type, row ) {
                             return row.mapas.status ? 'ATIVO' : 'INATIVO';
                         }

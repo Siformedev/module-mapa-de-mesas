@@ -14,6 +14,7 @@ Route::group(['middleware' => 'web', 'prefix' => 'mapademesas', 'as'=>'mapademes
         Route::post('mesa/datatable', 'MesaController@datatable')->name('mesa.datatable');
 
         Route::get('mesa-tipo-config', 'MesaTipoConfigController@index')->name('mesa-tipo-config.index');
+        Route::get('mesa-tipo-config/actives', 'MesaTipoConfigController@actives')->name('mesa-tipo-config.actives');
         Route::get('mesa-tipo-config/{mesaTipoConfig}', 'MesaTipoConfigController@show')->name('mesa-tipo-config.show');
         Route::put('mesa-tipo-config/{mesaTipoConfig}', 'MesaTipoConfigController@update')->name('mesa-tipo-config.update');
         Route::post('mesa-tipo-config/datatable', 'MesaTipoConfigController@datatable')->name('mesa-tipo-config.datatable');
@@ -29,7 +30,7 @@ Route::group(['middleware' => 'web', 'prefix' => 'mapademesas', 'as'=>'mapademes
         Route::put('mapa/{mapa}/manutencao/edit-config/{config}', 'MapaManutencaoController@editConfig')->name('mapa.manutencao.editconfig');
         Route::put('mapa/{mapa}/manutencao/mapa/block{config}', 'MapaManutencaoController@editConfig')->name('mapa.manutencao.editconfig');
 
-        Route::get('mapa/{id}/manutencao/mesa/add', 'MesaManutencaoController@add')->name('mapa.manutencao.mesa.add');
+        Route::get('mapa/{id}/manutencao/mesa/add/{top}/{left}/{config}', 'MesaManutencaoController@add')->name('mapa.manutencao.mesa.add');
         Route::get('mapa/{id}/manutencao/mesa/listar', 'MesaManutencaoController@listar')->name('mapa.manutencao.mesa.listar');
 
         Route::get('mapa/{id}/manutencao/mesa/edit-top-left/{mesa}/{top}/{left}', 'MesaManutencaoController@editTopLeft')->name('mapa.manutencao.mesa.edittopleft');

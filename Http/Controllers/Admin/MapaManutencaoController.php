@@ -2,7 +2,6 @@
 
 namespace Modules\MapaDeMesas\Http\Controllers\Admin;
 
-
 use DataTables\Editor\Format;
 use DataTables\Editor\Options;
 use DataTables\Editor\Validate;
