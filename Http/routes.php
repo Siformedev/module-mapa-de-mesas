@@ -1,6 +1,6 @@
 <?php
 
-Route::group(['middleware' => 'web', 'prefix' => 'mapademesas', 'as'=>'mapademesas.', 'namespace' => 'Modules\MapaDeMesas\Http\Controllers'], function()
+Route::group(['middleware' => ['web','auth'], 'prefix' => 'mapademesas', 'as'=>'mapademesas.', 'namespace' => 'Modules\MapaDeMesas\Http\Controllers'], function()
 {
     //Route::get('/', 'MapaDeMesasController@index')->name('index');
 
@@ -38,6 +38,15 @@ Route::group(['middleware' => 'web', 'prefix' => 'mapademesas', 'as'=>'mapademes
         Route::get('mapa/{id}/manutencao/mesa/edit-left/{mesa}/{left}', 'MesaManutencaoController@editLeft')->name('mapa.manutencao.mesa.editleft');
         Route::get('mapa/{id}/manutencao/mesa/del/{mesa}', 'MesaManutencaoController@del')->name('mapa.manutencao.mesa.del');
         Route::put('mapa/{mapa}/manutencao/mesa/block/{mesa}', 'MesaManutencaoController@block')->name('mapa.manutencao.mesa.block');
+
+        Route::get('mapa-lote-forming', 'MapaLoteFormingController@index')->name('mapa-lote-forming.index');
+        Route::post('mapa-lote-forming/datatable', 'MapaLoteFormingController@datatable')->name('mapa-lote-forming.datatable');
+
+        Route::get('mapa-lote-forming/add', 'MapaLoteFormingController@add')->name('mapa-lote-forming.add');
+        Route::get('mapa-lote-forming/add/list', 'MapaLoteFormingController@addList')->name('mapa-lote-forming.addlist');
+        Route::get('mapa-lote-forming/contract/{contract}/find/mapas', 'MapaLoteFormingController@getMapasFromContract')->name('mapa-lote-forming.getMapasFromContract');
+        Route::post('mapa-lote-forming/contract/{contract}/mapa/{mapa}', 'MapaLoteFormingController@updateOrCreate')->name('mapa-lote-forming.updateOrCreate');
+        Route::delete('mapa-lote-forming/contract/{contract}/mapa/{mapa}/remove', 'MapaLoteFormingController@remove')->name('mapa-lote-forming.remove');
     });
 
     Route::group(['prefix' => 'portal', 'namespace' => 'Portal', 'as'=>'portal.'], function()

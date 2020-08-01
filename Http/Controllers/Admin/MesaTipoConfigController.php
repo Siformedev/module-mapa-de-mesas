@@ -80,16 +80,15 @@ class MesaTipoConfigController extends Controller
                     ->Validator(Validate::notEmpty()),
 
                 Field::inst( 'mesas_tipo_configs.color_reversada' )
-                    ->Validator(Validate::notEmpty())
+                    ->Validator(Validate::notEmpty()),
+
+                Field::inst( 'mesas_tipo_configs.active' )
+                    ->Validator(Validate::boolean())
 
                 /* LEFT JOIN  */
 
             )
-            ->where(function ($q) use ($mapa_id){
-                if($mapa_id){
-                    //$q->where('mesas_tipo_configs.mapa_id', $mapa_id);
-                }
-
+            ->where(function ($q) {
             })
             ->process( $_POST )
             ->debug(true)

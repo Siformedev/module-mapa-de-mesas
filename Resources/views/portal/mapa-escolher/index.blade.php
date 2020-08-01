@@ -21,15 +21,15 @@
                         <div class="col-md-7">
                             <div class="row">
                                 <div class="col-sm-12 col-md-4 col-lg-4" style="border-left: 4px solid green; height: 80px; font-size: 24px; font-weight: bold; padding-left: 10px;">
-                                    <span>MESAS COMPRADAS</span> <br>
+                                    <span style="color: green">MESAS COMPRADAS</span> <br>
                                     {{$dataMapa['qtMesas']}}
                                 </div>
                                 <div class="col-sm-12 col-md-4 col-lg-4" style="border-left: 4px solid red; height: 80px; font-size: 24px; font-weight: bold; padding-left: 10px;">
-                                    ESCOLHIDAS <br>
+                                    <span style="color: red">ESCOLHIDAS</span> <br>
                                     {{$dataMapa['escolhidas']}}
                                 </div>
                                 <div class="col-sm-12 col-md-4 col-lg-4" style="border-left: 4px solid orange; height: 80px; font-size: 24px; font-weight: bold; padding-left: 10px;">
-                                    DISPONÍVEL <br>
+                                    <span style="color: orange"> DISPONÍVEL</span> <br>
                                     {{$dataMapa['disponivel']}}
                                 </div>
                             </div>
@@ -47,7 +47,7 @@
                                     <div class="row">
                                         <div class="col-sm-12 col-md-12 col-lg-12">
                                             <div style="width: {{$dataMapa['mapa']['imagem_x']}}px; height: {{$dataMapa['mapa']['imagem_y']}}px; margin: 10px auto; background: white; position: relative">
-                                                <img src="{{asset('uploads/mapa/' . $dataMapa['mapa']['imagem'])}}" style="width: {{$dataMapa['mapa']['imagem_x']}}px; height: {{$dataMapa['mapa']['imagem_y']}}px;">
+                                                <img src="{{asset('uploads/mapa/' . $dataMapa['mapa']['imagem'])}}?rand={{rand((250*250), (1050*1050))}}" style="width: {{$dataMapa['mapa']['imagem_x']}}px; height: {{$dataMapa['mapa']['imagem_y']}}px;">
                                                 @foreach($mesas as $mesa)
                                                     <?php
                                                     $popover_title = '';
@@ -70,7 +70,23 @@
                                                         $functionReservar = "reservarMesa({$mesa['mesa']['id']})";
                                                     }
                                                     ?>
-                                                    <div onclick="{{$functionReservar}}" data-toggle="{{$popover}}" data-title="{{$popover_title}}" data-content="{{$popover_content}}" style="position: absolute; cursor: pointer; border: 2px {{$mesa['config']['color']}} solid; text-align: center; width: {{$mesa['config']['width']}}px; height: {{$mesa['config']['height']}}px; border-radius: {{$mesa['config']['radius']}}px; line-height: {{$mesa['config']['line_height']}}px; font-size: {{$mesa['config']['font_size']}}px; background-color: {{$mesa['config']['background_color']}}; top: {{$mesa['mesa']['top']}}px; left: {{$mesa['mesa']['left']}}px; z-index: 2; color: {{$mesa['config']['color']}}; font-weight: bold;">{{$mesa['mesa']['numero']}}</div>
+                                                    <div
+                                                            onclick="{{$functionReservar}}"
+                                                            data-toggle="{{$popover}}"
+                                                            data-title="{{$popover_title}}"
+                                                            data-content="{{$popover_content}}"
+                                                            style="position: absolute;
+                                                                    cursor: pointer;
+                                                                    border: 2px {{$mesa['config']['color']}} solid;
+                                                                    text-align: center; width: {{$mesa['mesa']['config']['width']}}px;
+                                                                    height: {{$mesa['mesa']['config']['height']}}px;
+                                                                    border-radius: {{$mesa['mesa']['config']['radius']}}px;
+                                                                    line-height: {{$mesa['mesa']['config']['line_height']}}px; font-size: {{$mesa['mesa']['config']['font_size']}}px;
+                                                                    background-color: {{$mesa['config']['background_color']}};
+                                                                    top: {{$mesa['mesa']['top']}}px; left: {{$mesa['mesa']['left']}}px;
+                                                                    z-index: 2;
+                                                                    color: {{$mesa['config']['color']}};
+                                                                    font-weight: bold;">{{$mesa['mesa']['numero']}}</div>
                                                 @endforeach
                                             </div>
                                         </div>

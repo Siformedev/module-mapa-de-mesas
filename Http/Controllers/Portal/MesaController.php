@@ -4,6 +4,7 @@ namespace Modules\MapaDeMesas\Http\Controllers\Portal;
 
 
 use App\FormandoProdutosEServicos;
+use Carbon\Carbon;
 use DataTables\Editor\Format;
 use DataTables\Editor\Options;
 use DataTables\Editor\Validate;
@@ -45,6 +46,41 @@ class MesaController extends Controller
             ];
             return $resp;
         }
+
+        $pag = [];
+        $pag['parcelas'] = 0;
+        $pag['pago'] = 0;
+        foreach ($produto->parcelas as $parcela){
+
+            $date = Carbon::createFromFormat('Y-m-d', $parcela->dt_vencimento);
+            if($date->diffInDays(Carbon::now(), false) > 3){
+                $pag['parcelas'] += $parcela->valor;
+
+                foreach ($parcela->pagamento as $pagamento){
+                    $pag['pago'] += $pagamento->valor_pago;
+                }
+            }
+        }
+
+        if($pag['pago'] < $pag['parcelas']){
+            $resp = [
+                'success' => false,
+                'msg' => 'Constam pagamentos em abertos, favor entre em contato com o Atendimento'
+            ];
+            return $resp;
+        }
+
+
+
+
+        if($mesa->escolhas->count() > 0){
+            $resp = [
+                'success' => false,
+                'msg' => 'Esta mesa já está escolhida por outro formando'
+            ];
+            return $resp;
+        }
+
 
         $escolha = MesaEscolhida::create([
             'mesa_id' => $mesa->id,

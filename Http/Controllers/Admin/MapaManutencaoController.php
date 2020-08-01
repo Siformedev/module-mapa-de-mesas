@@ -76,11 +76,6 @@ class MapaManutencaoController extends Controller
         return ['success' => true];
     }
 
-    public function editConfig(Mapas $mapa, MesasTipoConfig $config)
-    {
-        $mapa->config_id = $config->id;
-        $mapa->save();
-        return $config;
-    }
+
 
 }

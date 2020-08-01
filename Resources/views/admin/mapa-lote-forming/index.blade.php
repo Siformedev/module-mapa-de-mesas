@@ -9,7 +9,7 @@
                     <div class="panel-heading" style="padding: 15px;">
                         <div class="row">
                             <div class="col-md-12">
-                                <h3>MESAS TIPO CONFIG</h3>
+                                <h3>MAPA LOTE FORMANDO</h3>
                                 <hr>
                             </div>
                         </div>
@@ -18,24 +18,13 @@
                         <div class="row">
                             <div class="col-sm-12 col-md-12">
 
-                                <table id="mesas" class="table table-hover nowrap dataTable dtr-inline">
+                                <table id="mapa-lote-forming" class="table table-hover nowrap dataTable dtr-inline">
                                     <thead>
                                     <tr>
-{{--                                        <th>#</th>--}}
-                                        <th>ID</th>
-                                        <th>Nome</th>
-                                        <th>Width</th>
-                                        <th>Height</th>
-                                        <th>Radius</th>
-                                        <th>Line Height</th>
-                                        <th>Font Size</th>
-                                        <th>BG Color Livre</th>
-                                        <th>Texto Color Livre</th>
-                                        <th>BG Color Ocupada</th>
-                                        <th>Texto Color Ocupada</th>
-                                        <th>BG Color Bloqueada</th>
-                                        <th>Texto Color Bloqueada</th>
-                                        <th>Status</th>
+                                        <th>Mapa</th>
+                                        <th>Lote</th>
+                                        <th>Formando</th>
+                                        <th>Data Inicio</th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -94,47 +83,30 @@
                     }
                 },
                 ajax: {
-                    url: '{{route('mapademesas.admin.mesa-tipo-config.datatable')}}',
+                    url: '{{route('mapademesas.admin.mapa-lote-forming.datatable')}}',
                     type: "POST",
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     }
                 },
-                table: '#mesas',
+                table: '#mapa-lote-forming',
                 fields: [
-                    { label: "Nome <font color=red>*</font>", name: "mesas_tipo_configs.nome", attr: {type: 'text'} },
-                    { label: "Width <font color=red>*</font>", name: "mesas_tipo_configs.width",  attr: {type: 'number'}},
-                    { label: "Height <font color=red>*</font>", name: "mesas_tipo_configs.height",  attr: {type: 'number'} },
-                    { label: "Radius <font color=red>*</font>", name: "mesas_tipo_configs.radius",  attr: {type: 'number'} },
-                    { label: "line_height <font color=red>*</font>", name: "mesas_tipo_configs.line_height",  attr: {type: 'number'} },
-                    { label: "font_size <font color=red>*</font>", name: "mesas_tipo_configs.font_size",  attr: {type: 'number'} },
-                    { label: "background_color_livre <font color=red>*</font>", name: "mesas_tipo_configs.background_color_livre",  attr: {type: 'color', style: 'padding: 2px'} },
-                    { label: "color_livre <font color=red>*</font>", name: "mesas_tipo_configs.color_livre",  attr: {type: 'color', style: 'padding: 2px'} },
-                    { label: "background_color_ocupada <font color=red>*</font>", name: "mesas_tipo_configs.background_color_ocupada",  attr: {type: 'color', style: 'padding: 2px'} },
-                    { label: "color_ocupada <font color=red>*</font>", name: "mesas_tipo_configs.color_ocupada",  attr: {type: 'color', style: 'padding: 2px'} },
-                    { label: "background_color_reversada <font color=red>*</font>",  name: "mesas_tipo_configs.background_color_reversada", attr: {type: 'color', style: 'padding: 2px'} },
-                    { label: "color_reversada <font color=red>*</font>",  name: "mesas_tipo_configs.color_reversada", attr: {type: 'color', style: 'padding: 2px'} },
-                    {
-                        label: "Status",
-                        name: "mesas_tipo_configs.active",
-                        type:  "radio",
-                        options: [
-                            { label: "INATIVO", value: 0 },
-                            { label: "ATIVO",  value: 1 }
-                        ]
-                    },
+                    { label: "Mapa <font color=red>*</font>", name: "mapa_lote_formings.mapa_id", type: 'select' },
+                    { label: "Lote <font color=red>*</font>", name: "mapa_lote_formings.width",  attr: {type: 'number'}},
+                    { label: "Formando <font color=red>*</font>", name: "mapa_lote_formings.forming_id", type: 'select' },
+                    { label: "Data Início <font color=red>*</font>", name: "mapa_lote_formings.data_inicio", type: 'datetime', format: 'DD/MM/YYYY H:mm', }
                 ]
             } );
 
             editor.on('open', function (){
             });
 
-            const table = $('#mesas').DataTable({
+            const table = $('#mapa-lote-forming').DataTable({
                 dom: "<'row'<'col-sm-4'l><'col-sm-4'B><'col-sm-4'f>>" +
                     "<'row'<'col-sm-12'tr>>" +
                     "<'row'<'col-sm-5'i><'col-sm-7'p>>",
                 ajax: {
-                    url: '{{route('mapademesas.admin.mesa-tipo-config.datatable')}}',
+                    url: '{{route('mapademesas.admin.mapa-lote-forming.datatable')}}',
                     type: "POST",
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -186,25 +158,12 @@
                     }
                 },
                 columns: [
-                    // { data: null, render: function (row){
-                    //         return `<a href="mapa/${row.mapas.id}/manutencao" class="btn btn-info btn-m"><i class="glyphicon glyphicon-wrench"></i></a>`;
-                    // } },
-                    { data: "mesas_tipo_configs.id" },
-                    { data: "mesas_tipo_configs.nome" },
-                    { data: "mesas_tipo_configs.width" },
-                    { data: "mesas_tipo_configs.height" },
-                    { data: "mesas_tipo_configs.radius" },
-                    { data: "mesas_tipo_configs.line_height" },
-                    { data: "mesas_tipo_configs.font_size" },
-                    { data: "mesas_tipo_configs.background_color_livre" },
-                    { data: "mesas_tipo_configs.color_livre" },
-                    { data: "mesas_tipo_configs.background_color_ocupada" },
-                    { data: "mesas_tipo_configs.color_ocupada" },
-                    { data: "mesas_tipo_configs.background_color_reversada" },
-                    { data: "mesas_tipo_configs.color_reversada" },
-                    { data: null, render: function (row){
-                            return (row.mesas_tipo_configs.active) ? 'ATIVO' : 'INATIVO';
-                    } }
+                    { data: "mapas.nome" },
+                    { data: "mapa_lote_formings.lote" },
+                    { data: null, render: function(row) {
+                        return row.formings.nome + ' ' + row.formings.sobrenome;
+                        } },
+                    { data: "mapa_lote_formings.data_inicio" }
                 ],
                 buttons: [
                     { extend: "create", editor: editor },

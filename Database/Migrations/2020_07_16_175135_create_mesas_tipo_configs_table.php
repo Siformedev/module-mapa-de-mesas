@@ -27,7 +27,7 @@ class CreateMesasTipoConfigsTable extends Migration
             $table->string('background_color_ocupada');
             $table->string('color_reversada');
             $table->string('background_color_reversada');
-            $table->boolean('active');
+            $table->boolean('active')->default(0);
             $table->timestamps();
         });
     }

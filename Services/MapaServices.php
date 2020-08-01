@@ -6,10 +6,13 @@ namespace Modules\MapaDeMesas\Services;
 
 use App\Event;
 use App\FormandoProdutosEServicosCateriasTipos;
+use Carbon\Carbon;
+use Modules\MapaDeMesas\Entities\MapaLoteForming;
 use Modules\MapaDeMesas\Entities\Mapas;
 use Modules\MapaDeMesas\Entities\Mesa;
 use Modules\MapaDeMesas\Entities\MesaEscolhida;
 use Modules\MapaDeMesas\Entities\MesasTipoConfig;
+use phpDocumentor\Reflection\Types\This;
 
 class MapaServices
 {
@@ -40,6 +43,10 @@ class MapaServices
                                     ->where('fps_id', $product->id)
                                     ->where('forming_id', $forming->id);
 
+                                $liberacao = MapaLoteForming::where('forming_id', $forming->id)->where('mapa_id', $mapa->id)->first();
+
+                                if($liberacao instanceof MapaLoteForming) $lib = $liberacao->toArray();
+
                                 $qtMesas = $mesa->sum('quantity');
                                 $disponivel = $qtMesas - $escolhidas->count();
                                 if(count($mesa) > 0){
@@ -50,7 +57,9 @@ class MapaServices
                                         'mesas' => $mesa->toArray(),
                                         'qtMesas' => $qtMesas,
                                         'escolhidas' => $escolhidas->count(),
-                                        'disponivel' => $disponivel
+                                        'disponivel' => $disponivel,
+                                        'liberacao' => @$lib,
+                                        'liberacaoStatus' => self::verificaLiberacao($liberacao)
                                     ];
                                 }
                             }
@@ -86,6 +95,10 @@ class MapaServices
                                 ->where('fps_id', $product->id)
                                 ->where('forming_id', $forming->id);
 
+                            $liberacao = MapaLoteForming::where('forming_id', $forming->id)->where('mapa_id', $mapa->id)->first();
+
+                            if($liberacao instanceof MapaLoteForming) $lib = $liberacao->toArray();
+
                             $qtMesas = $mesa->sum('quantity');
                             $disponivel = $qtMesas - $escolhidas->count();
                             if(count($mesa) > 0){
@@ -96,7 +109,9 @@ class MapaServices
                                     'mesas' => $mesa->toArray(),
                                     'qtMesas' => $qtMesas,
                                     'escolhidas' => $escolhidas->count(),
-                                    'disponivel' => $disponivel
+                                    'disponivel' => $disponivel,
+                                    'liberacao' => @$lib,
+                                    'liberacaoStatus' => self::verificaLiberacao($liberacao)
                                 ];
                             }
 
@@ -112,8 +127,7 @@ class MapaServices
     public static function dadosMesas(Mapas $mapa)
     {
         $dataMesas = [];
-        $mesas = Mesa::with('escolhas')->where('mapa_id', $mapa->id)->orderBy('numero')->get();
-        $config = $mapa->config;
+        $mesas = Mesa::with(['escolhas', 'config'])->where('mapa_id', $mapa->id)->orderBy('numero')->get();
         foreach ($mesas as $mesa){
 
             // Escolhas
@@ -123,38 +137,40 @@ class MapaServices
                 foreach ($mesa->escolhas as $escolha){
                     if($escolha->cancelado == 1) continue;
                     $escolhida = true;
-                    $formandosEscolheu[] = $escolha->forming->first(['id', 'nome', 'sobrenome', 'img'])->toArray();
+                    $formandosEscolheu[] = $escolha->forming->toArray();
                 }
             }
 
-            $config = [
-                'width' => $mapa->config->width,
-                'height' => $mapa->config->height,
-                'radius' => $mapa->config->radius,
-                'line_height' => $mapa->config->line_height,
-                'font_size' => $mapa->config->font_size,
-            ];
-
             if($escolhida){
-                $config['background_color'] = $mapa->config->background_color_ocupada;
-                $config['color'] = $mapa->config->color_ocupada;
+                $config['background_color'] = $mesa->config->background_color_ocupada;
+                $config['color'] = $mesa->config->color_ocupada;
             }elseif($mesa->bloqueada){
-                $config['background_color'] = $mapa->config->background_color_reversada;
-                $config['color'] = $mapa->config->color_reversada;
+                $config['background_color'] = $mesa->config->background_color_reversada;
+                $config['color'] = $mesa->config->color_reversada;
             }else{
-                $config['background_color'] = $mapa->config->background_color_livre;
-                $config['color'] = $mapa->config->color_livre;
+                $config['background_color'] = $mesa->config->background_color_livre;
+                $config['color'] = $mesa->config->color_livre;
             }
 
 
             $dataMesas[] = [
                 'mesa' => $mesa->toArray(),
-                'config' => $config,
                 'escolhida' => $escolhida,
+                'config' => $config,
                 'escolhas' => $formandosEscolheu
             ];
         }
         return $dataMesas;
+    }
+
+    public static function verificaLiberacao(MapaLoteForming $mapaLoteForming = null)
+    {
+        if($mapaLoteForming){
+            $dateNow = Carbon::now();
+            $liberacaoLote = Carbon::createFromFormat('Y-m-d H:i:s', $mapaLoteForming->data_inicio);
+            return $dateNow->greaterThanOrEqualTo($liberacaoLote);
+        }
+        return false;
     }
 
 }

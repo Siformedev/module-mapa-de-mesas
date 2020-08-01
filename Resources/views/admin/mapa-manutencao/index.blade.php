@@ -17,7 +17,7 @@
 
                         <div class="col-md-2 form-group">
                             <label>Config Mesa</label>
-                            {!! Form::select('size', \Modules\MapaDeMesas\Entities\MesasTipoConfig::all()->pluck('nome', 'id'), $mapa->config_id, ['placeholder' => 'Selecione a configuração das mesas', 'class' => 'form-control editConfig']); !!}
+                            {!! Form::select('size', \Modules\MapaDeMesas\Entities\MesasTipoConfig::all()->pluck('nome', 'id'), null, ['placeholder' => 'Selecione a configuração das mesas', 'class' => 'form-control editConfig']); !!}
                         </div>
 
                         <div class="col-md-1 form-group">
@@ -96,19 +96,6 @@
         var imagem_y = '{{$mapa->imagem_y}}';
         var proximaNumero = 0;
 
-        var config = {
-            width: '{{$mapa->config->width}}',
-            height: '{{$mapa->config->height}}',
-            radius: '{{$mapa->config->radius}}',
-            line_height: '{{$mapa->config->line_height}}',
-            font_size: '{{$mapa->config->font_size}}',
-            background_color_livre: '{{$mapa->config->background_color_livre}}',
-            background_color_ocupada: '{{$mapa->config->background_color_ocupada}}',
-            background_color_reversada: '{{$mapa->config->background_color_reversada}}',
-            color_livre: '{{$mapa->config->color_livre}}',
-            color_ocupada: '{{$mapa->config->color_ocupada}}',
-            color_reversada: '{{$mapa->config->color_reversada}}'
-        };
 
 
         // This will upload the file after having read it
@@ -126,14 +113,16 @@
                 response => response.json()
             ).then(
                 success => {
-                    const rand = Math.random() * (9999999 - 1111) + 1111;
-                    $("#imagem_x").val(success.x);
-                    $("#imagem_y").val(success.y);
-                    imagem_x = success.x;
-                    imagem_y = success.y;
-                    $("#mapa").css('width', success.x).css('height', success.y);
-                    $("#mapa").html();
-                    $("#mapa").html(`<img src="${publicPath}/uploads/mapa/{{$mapa->id}}.jpg?v=${rand}" style="width: ${success.x}px; height: ${success.y}px; z-index:1" />`);
+                    window.location.reload(true);
+
+                {{--const rand = Math.random() * (9999999 - 1111) + 1111;--}}
+                    {{--$("#imagem_x").val(success.x);--}}
+                    {{--$("#imagem_y").val(success.y);--}}
+                    {{--imagem_x = success.x;--}}
+                    {{--imagem_y = success.y;--}}
+                    {{--$("#mapa").css('width', success.x).css('height', success.y);--}}
+                    {{--$("#mapa").html();--}}
+                    {{--$("#mapa").html(`<img src="${publicPath}/uploads/mapa/{{$mapa->id}}.jpg?v=${rand}" style="width: ${success.x}px; height: ${success.y}px; z-index:1" />`);--}}
                 }
             ).catch(
                 error => console.log(error)
@@ -330,7 +319,7 @@
                 .then(res => res.json())
                 .then(data => {
                     if(data.success){
-                        //getMapaMesas();
+                        getMapaMesas();
                     }
                 })
         }
@@ -340,7 +329,7 @@
                 .then(res => res.json())
                 .then(data => {
                     if(data.success){
-                        //getMapaMesas();
+                        getMapaMesas();
                     }
                 })
         }
@@ -397,7 +386,6 @@
                 .then(res => res.json())
                 .then(data => {
                     if(data){
-                        config = data;
                         getMesas();
                     }
                 })
@@ -493,7 +481,6 @@
                                 return response.json();
                             }).then(function(data) {
                                 if(data){
-                                    config = data;
                                     getMesas();
                                     getMapaMesas();
                                     getMesasConfig();

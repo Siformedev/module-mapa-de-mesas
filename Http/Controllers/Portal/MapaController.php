@@ -6,6 +6,7 @@ namespace Modules\MapaDeMesas\Http\Controllers\Portal;
 use App\Event;
 use App\FormandoProdutosEServicos;
 use App\FormandoProdutosEServicosCateriasTipos;
+use Carbon\Carbon;
 use DataTables\Editor\Format;
 use DataTables\Editor\Options;
 use DataTables\Editor\Validate;
@@ -38,9 +39,12 @@ class MapaController extends Controller
         $forming = auth()->user()->userable;
 
         $dataMapa = MapaServices::dadosFormandoMapa($forming, $produto, $mapa);
+        if(!$dataMapa['liberacaoStatus']){
+            return redirect()->route('mapademesas.portal.mapas.index');
+        }
 
         $mesas = MapaServices::dadosMesas($mapa);
-
+        
         return view('mapademesas::portal.mapa-escolher.index', compact('dataMapa', 'mesas'));
     }
 

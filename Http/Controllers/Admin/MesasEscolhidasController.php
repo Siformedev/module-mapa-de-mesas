@@ -118,12 +118,12 @@ class MesasEscolhidasController extends Controller
             ->leftJoin('formando_produtos_e_servicos', 'formando_produtos_e_servicos.id', '=', 'mesa_escolhidas.fps_id')
             ->on('preCreate', function ($e, &$d){
                 $mapa = Mapas::find($d['mesa_escolhidas']['mapa_id']);
-                $d['mesa_escolhidas']['event_id'] = $mapa->id;
+                $d['mesa_escolhidas']['event_id'] = $mapa->event_id;
                 return $d;
             })
             ->on('preEdit', function ($e, $i, &$d){
                 $mapa = Mapas::find($d['mesa_escolhidas']['mapa_id']);
-                $d['mesa_escolhidas']['event_id'] = $mapa->id;
+                $d['mesa_escolhidas']['event_id'] = $mapa->event_id;
                 return $d;
             })
             ->process( $_POST )
