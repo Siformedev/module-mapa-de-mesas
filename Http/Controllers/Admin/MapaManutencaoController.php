@@ -14,7 +14,7 @@ use
     DataTables\Editor,
     DataTables\Editor\Field;
 use Illuminate\Support\Facades\DB;
-use Modules\MapaDeMesas\Entities\mapas;
+use Modules\MapaDeMesas\Entities\Mapas;
 use Modules\MapaDeMesas\Entities\MesasTipoConfig;
 
 use Intervention\Image\ImageManagerStatic as Image;
