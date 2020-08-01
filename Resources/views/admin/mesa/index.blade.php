@@ -9,7 +9,7 @@
                     <div class="panel-heading" style="padding: 15px;">
                         <div class="row">
                             <div class="col-md-12">
-                                <h3>MAPAS</h3>
+                                <h3>MESAS</h3>
                                 <hr>
                             </div>
                         </div>
@@ -20,11 +20,11 @@
                                 <h6>FILTROS</h6>
                                 <div class="row">
                                 <div class="col-sm-3 form-group">
-                                    <label>Contrato</label>
-                                    <select class="form-control" name="contract_id" id="contract_id">
+                                    <label>Mapas</label>
+                                    <select class="form-control" name="mapa_id" id="mapa_id">
                                         <option value="0">Todos</option>
-                                        @foreach(\App\Contract::all() as $contrato)
-                                            <option value="{{$contrato->id}}">{{$contrato->name}}</option>
+                                        @foreach(\Modules\MapaDeMesas\Entities\Mapas::where('status', 1)->get() as $mapa)
+                                            <option value="{{$mapa->id}}">{{$mapa->nome}}</option>
                                         @endforeach
                                     </select>
 
@@ -37,15 +37,16 @@
                         <div class="row">
                             <div class="col-sm-12 col-md-12">
 
-                                <table id="example" class="table table-hover nowrap dataTable dtr-inline">
+                                <table id="mesas" class="table table-hover nowrap dataTable dtr-inline">
                                     <thead>
                                     <tr>
-                                        <th>#</th>
-                                        <th>Nome</th>
-                                        <th>Contrato</th>
-                                        <th>Evento</th>
-                                        <th>Data Inicio</th>
-                                        <th>Data Fim</th>
+{{--                                        <th>#</th>--}}
+                                        <th>Mapa</th>
+                                        <th>Número</th>
+                                        <th>Config</th>
+                                        <th>Top</th>
+                                        <th>Left</th>
+                                        <th>Bloqueada</th>
                                         <th>Status</th>
                                     </tr>
                                     </thead>
@@ -105,22 +106,31 @@
                     }
                 },
                 ajax: {
-                    url: '{{route('mapademesas.admin.mapa.datatable')}}',
+                    url: '{{route('mapademesas.admin.mesa.datatable')}}',
                     type: "POST",
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     }
                 },
-                table: '#example',
+                table: '#mesas',
                 fields: [
-                    { label: "Nome <font color=red>*</font>", name: "mapas.nome" },
-                    { label: "Contrato <font color=red>*</font>", name: "mapas.contract_id", type: "select" },
-                    { label: "Evento <font color=red>*</font>", name: "mapas.event_id", type: "select" },
-                    { label: "Data Início <font color=red>*</font>", name: "mapas.data_inicio", type: 'datetime', format: 'DD/MM/YYYY H:mm', },
-                    { label: "Data Fim <font color=red>*</font>", name: "mapas.data_fim", type: 'datetime', format: 'DD/MM/YYYY H:mm', },
+                    { label: "Número <font color=red>*</font>", name: "mesas.numero", attr: {type: 'number'} },
+                    { label: "Tipo Config <font color=red>*</font>", name: "mesas.config_id", type: "select" },
+                    { label: "Mapa <font color=red>*</font>", name: "mesas.mapa_id", type: "select" },
+                    { label: "Top <font color=red>*</font>",  name: "mesas.top", attr: {type: 'number'} },
+                    { label: "Left <font color=red>*</font>",  name: "mesas.left", attr: {type: 'number'} },
+                    {
+                        label: "Bloqueada",
+                        name: "mesas.bloqueada",
+                        type:  "radio",
+                        options: [
+                            { label: "NÃO", value: 0 },
+                            { label: "SIM",  value: 1 }
+                        ]
+                    },
                     {
                         label: "Status",
-                        name: "mapas.status",
+                        name: "mesas.status",
                         type:  "radio",
                         options: [
                             { label: "INATIVO", value: 0 },
@@ -130,12 +140,12 @@
                 ]
             } );
 
-            const table = $('#example').DataTable({
+            const table = $('#mesas').DataTable({
                 dom: "<'row'<'col-sm-4'l><'col-sm-4'B><'col-sm-4'f>>" +
                     "<'row'<'col-sm-12'tr>>" +
                     "<'row'<'col-sm-5'i><'col-sm-7'p>>",
                 ajax: {
-                    url: '{{route('mapademesas.admin.mapa.datatable')}}',
+                    url: '{{route('mapademesas.admin.mesa.datatable')}}',
                     type: "POST",
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -187,16 +197,20 @@
                     }
                 },
                 columns: [
-                    { data: null, render: function (row){
-                            return `<a href="mapa/${row.mapas.id}/manutencao" class="btn btn-info btn-m"><i class="glyphicon glyphicon-wrench"></i></a>`;
-                    } },
+                    // { data: null, render: function (row){
+                    //         return `<a href="mapa/${row.mapas.id}/manutencao" class="btn btn-info btn-m"><i class="glyphicon glyphicon-wrench"></i></a>`;
+                    // } },
                     { data: "mapas.nome" },
-                    { data: "contracts.name" },
-                    { data: "events.name" },
-                    { data: "mapas.data_inicio" },
-                    { data: "mapas.data_fim" },
+                    { data: "mesas.numero" },
+                    { data: "mesas_tipo_configs.nome" },
+                    { data: "mesas.top" },
+                    { data: "mesas.left" },
                     { data: null, render: function ( val, type, row ) {
-                            return row.mapas.status ? 'ATIVO' : 'INATIVO';
+                            return row.mesas.bloqueada ? 'SIM' : 'NÃO';
+                        }
+                    },
+                    { data: null, render: function ( val, type, row ) {
+                            return row.mesas.status ? 'ATIVO' : 'INATIVO';
                         }
                     }
                 ],
@@ -221,9 +235,9 @@
                 .container()
                 .appendTo( $('.col-sm-6:eq(0)', table.table().container() ) );
 
-            $("#contract_id").change(e => {
+            $("#mapa_id").change(e => {
                 const id = e.target.value;
-                table.ajax.url('{{route('mapademesas.admin.mapa.datatable')}}?contract_id=' + id).load();
+                table.ajax.url('{{route('mapademesas.admin.mesa.datatable')}}?mapa_id=' + id).load();
             })
         } );
     </script>

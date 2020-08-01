@@ -11,5 +11,8 @@
         "psr-4": {
             "Modules\\MapaDeMesas\\": ""
         }
+    },
+    "require": {
+        "intervention/image": "^2.5"
     }
 }

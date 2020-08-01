@@ -15,9 +15,12 @@ use
     DataTables\Editor,
     DataTables\Editor\Field;
 use Illuminate\Support\Facades\DB;
+use Modules\MapaDeMesas\Http\Traits\DatatableTrait;
 
 class MapaController extends Controller
 {
+    use DatatableTrait;
+
     public function index()
     {
         return view('mapademesas::admin.mapa.index');
@@ -25,10 +28,10 @@ class MapaController extends Controller
 
     public function datatable()
     {
-        sleep(5);
+
         $contract_id = filter_input(INPUT_GET, 'contract_id', FILTER_VALIDATE_INT);
 
-        Editor::inst( $this->db, 'mapas' )
+        Editor::inst( $this->db, 'mapas', 'id' )
             ->fields(
                 Field::inst( 'mapas.id' ),
                 Field::inst( 'mapas.contract_id' )
@@ -53,6 +56,7 @@ class MapaController extends Controller
                     ->getFormatter( Format::dateSqlToFormat( 'd/m/Y H:i' ) )
                     ->setFormatter( Format::dateTime( 'd/m/Y H:i', 'Y-m-d H:i:s' ) )
                     ->Validator(Validate::notEmpty()),
+
                 Field::inst( 'mapas.status' )
                     ->Validator(Validate::boolean()),
 
@@ -69,7 +73,6 @@ class MapaController extends Controller
             ->leftJoin('contracts', 'contracts.id', '=', 'mapas.contract_id')
             ->leftJoin('events', 'events.id', '=', 'mapas.event_id')
             ->process( $_POST )
-            ->debug(true)
             ->json();
     }
 }

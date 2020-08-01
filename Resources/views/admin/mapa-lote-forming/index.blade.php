@@ -9,44 +9,22 @@
                     <div class="panel-heading" style="padding: 15px;">
                         <div class="row">
                             <div class="col-md-12">
-                                <h3>MAPAS</h3>
+                                <h3>MAPA LOTE FORMANDO</h3>
                                 <hr>
                             </div>
                         </div>
                     </div>
                     <div class="panel-body">
                         <div class="row">
-                            <div class="col-sm-12">
-                                <h6>FILTROS</h6>
-                                <div class="row">
-                                <div class="col-sm-3 form-group">
-                                    <label>Contrato</label>
-                                    <select class="form-control" name="contract_id" id="contract_id">
-                                        <option value="0">Todos</option>
-                                        @foreach(\App\Contract::all() as $contrato)
-                                            <option value="{{$contrato->id}}">{{$contrato->name}}</option>
-                                        @endforeach
-                                    </select>
-
-                                </div>
-                                </div>
-                                <hr>
-                            </div>
-
-                        </div>
-                        <div class="row">
                             <div class="col-sm-12 col-md-12">
 
-                                <table id="example" class="table table-hover nowrap dataTable dtr-inline">
+                                <table id="mapa-lote-forming" class="table table-hover nowrap dataTable dtr-inline">
                                     <thead>
                                     <tr>
-                                        <th>#</th>
-                                        <th>Nome</th>
-                                        <th>Contrato</th>
-                                        <th>Evento</th>
+                                        <th>Mapa</th>
+                                        <th>Lote</th>
+                                        <th>Formando</th>
                                         <th>Data Inicio</th>
-                                        <th>Data Fim</th>
-                                        <th>Status</th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -105,37 +83,30 @@
                     }
                 },
                 ajax: {
-                    url: '{{route('mapademesas.admin.mapa.datatable')}}',
+                    url: '{{route('mapademesas.admin.mapa-lote-forming.datatable')}}',
                     type: "POST",
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     }
                 },
-                table: '#example',
+                table: '#mapa-lote-forming',
                 fields: [
-                    { label: "Nome <font color=red>*</font>", name: "mapas.nome" },
-                    { label: "Contrato <font color=red>*</font>", name: "mapas.contract_id", type: "select" },
-                    { label: "Evento <font color=red>*</font>", name: "mapas.event_id", type: "select" },
-                    { label: "Data Início <font color=red>*</font>", name: "mapas.data_inicio", type: 'datetime', format: 'DD/MM/YYYY H:mm', },
-                    { label: "Data Fim <font color=red>*</font>", name: "mapas.data_fim", type: 'datetime', format: 'DD/MM/YYYY H:mm', },
-                    {
-                        label: "Status",
-                        name: "mapas.status",
-                        type:  "radio",
-                        options: [
-                            { label: "INATIVO", value: 0 },
-                            { label: "ATIVO",  value: 1 }
-                        ]
-                    }
+                    { label: "Mapa <font color=red>*</font>", name: "mapa_lote_formings.mapa_id", type: 'select' },
+                    { label: "Lote <font color=red>*</font>", name: "mapa_lote_formings.width",  attr: {type: 'number'}},
+                    { label: "Formando <font color=red>*</font>", name: "mapa_lote_formings.forming_id", type: 'select' },
+                    { label: "Data Início <font color=red>*</font>", name: "mapa_lote_formings.data_inicio", type: 'datetime', format: 'DD/MM/YYYY H:mm', }
                 ]
             } );
 
-            const table = $('#example').DataTable({
+            editor.on('open', function (){
+            });
+
+            const table = $('#mapa-lote-forming').DataTable({
                 dom: "<'row'<'col-sm-4'l><'col-sm-4'B><'col-sm-4'f>>" +
                     "<'row'<'col-sm-12'tr>>" +
                     "<'row'<'col-sm-5'i><'col-sm-7'p>>",
                 ajax: {
-                    url: '{{route('mapademesas.admin.mapa.datatable')}}',
+                    url: '{{route('mapademesas.admin.mapa-lote-forming.datatable')}}',
                     type: "POST",
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -187,18 +158,12 @@
                     }
                 },
                 columns: [
-                    { data: null, render: function (row){
-                            return `<a href="mapa/${row.mapas.id}/manutencao" class="btn btn-info btn-m"><i class="glyphicon glyphicon-wrench"></i></a>`;
-                    } },
                     { data: "mapas.nome" },
-                    { data: "contracts.name" },
-                    { data: "events.name" },
-                    { data: "mapas.data_inicio" },
-                    { data: "mapas.data_fim" },
-                    { data: null, render: function ( val, type, row ) {
-                            return row.mapas.status ? 'ATIVO' : 'INATIVO';
-                        }
-                    }
+                    { data: "mapa_lote_formings.lote" },
+                    { data: null, render: function(row) {
+                        return row.formings.nome + ' ' + row.formings.sobrenome;
+                        } },
+                    { data: "mapa_lote_formings.data_inicio" }
                 ],
                 buttons: [
                     { extend: "create", editor: editor },
@@ -220,11 +185,6 @@
             table.buttons()
                 .container()
                 .appendTo( $('.col-sm-6:eq(0)', table.table().container() ) );
-
-            $("#contract_id").change(e => {
-                const id = e.target.value;
-                table.ajax.url('{{route('mapademesas.admin.mapa.datatable')}}?contract_id=' + id).load();
-            })
         } );
     </script>
 
