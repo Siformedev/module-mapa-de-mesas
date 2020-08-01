@@ -20,7 +20,6 @@ class CreateMesasTable extends Migration
             $table->integer('numero');
             $table->integer('top')->default(0);
             $table->integer('left')->default(0);
-            $table->integer('config_id')->default(0);
             $table->boolean('bloqueada')->default(0);
             $table->integer('config_id')->unsigned();
             $table->foreign('config_id')->references('id')->on('mesas_tipo_configs');
