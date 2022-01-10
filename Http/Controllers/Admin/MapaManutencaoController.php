@@ -36,7 +36,7 @@ class MapaManutencaoController extends Controller
         $imgName = 'uploads/mapa/' . $id . '.jpg';
         move_uploaded_file($_FILES['imagem']['tmp_name'], public_path($imgName));
 
-        Image::configure(array('driver' => 'imagick'));
+        // Image::configure(array('driver' => 'imagick'));
 
         $image = Image::make(public_path($imgName));
 
