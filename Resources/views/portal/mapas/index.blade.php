@@ -29,8 +29,8 @@
                             <section class="panel">
                                 <div class="panel-heading">
                                     <h3>
-                                        <a href="#">{{$mesa['event']['name']}}
-                                            - {{date("d/m/Y H:i", strtotime($mesa['event']['date']))}}</a>
+                                        {{$mesa['event']['name']}}
+                                            - {{date("d/m/Y H:i", strtotime($mesa['event']['date']))}}
                                     </h3>
                                 </div>
                                 <div class="panel-body">
