@@ -40,7 +40,7 @@
                                         </div>
                                         <div class="col-md-7" style="font-size: 16px;">
                                             <span><b>Descrição do Evento:</b> {{$mesa['event']['description']}}</span><br>
-                                            <span><b>Produto:</b> {{$mesa['product']['name']}}</span><br>
+                                            <span><b>Produto:</b> {{$mesa['product']['name']}} [#{{$mesa['product']['id']}}]</span><br>
                                             <span><b>Local:</b> {{$mesa['event']['address']}}</span><br>
                                             <span><b>Você possui {{$mesa['qtMesas']}} mesa (s). E já escolheu {{($mesa['escolhidas'] >= $mesa['qtMesas']) ? 'todas' : $mesa['escolhidas']}}</b> </span><br>
                                         </div>
