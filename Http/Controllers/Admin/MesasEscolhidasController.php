@@ -99,6 +99,7 @@ class MesasEscolhidasController extends Controller
                 Field::inst( 'mesas.numero' ),
                 Field::inst( 'events.name' ),
                 Field::inst( 'formings.nome' ),
+                Field::inst( 'formings.sobrenome' ),
                 Field::inst( 'formando_produtos_e_servicos.name' ),
                 Field::inst( 'mapas.nome' )
             )

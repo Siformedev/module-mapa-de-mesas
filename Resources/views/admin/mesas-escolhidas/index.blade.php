@@ -196,7 +196,9 @@
                     { data: "mapas.nome" },
                     { data: "mesas.numero" },
                     { data: "events.name" },
-                    { data: "formings.nome" },
+                    { data: null, render: function(row){
+                        return row.formings.nome + ' ' + row.formings.sobrenome;
+                    }},
                     { data: "formando_produtos_e_servicos.name" },
                     { data: null, render: function ( val, type, row ) {
                             return row.mesa_escolhidas.cancelado ? 'SIM' : 'NÃO';
