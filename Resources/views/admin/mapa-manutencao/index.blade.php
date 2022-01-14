@@ -71,8 +71,8 @@
                         </div>
 
 
-                        <div class="col-md-12 form-group">
-                            <div id="mapa" class="dropzone" style="width: {{$mapa->imagem_x}}px; height: {{$mapa->imagem_y}}px; margin: 0 auto; position: relative">
+                        <div class="col-md-12 form-group" style="overflow-x: auto;">
+                            <div id="mapa" class="dropzone" style="width: {{$mapa->imagem_x}}px; height: {{$mapa->imagem_y}}px; margin: 0 auto; position: relative;">
 
                             </div>
                         </div>
