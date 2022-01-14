@@ -148,7 +148,7 @@
                         return row.forming.nome + ' ' + row.forming.sobrenome;
                         } },
                     { data: "forming.course.name" },
-                    { data: "forming.dt_adesao" },
+                    { data: "forming.created_at" },
                     { data: "quantity" },
                     { data: "lote.numero" },
                     { data: "lote.data_inicio" }

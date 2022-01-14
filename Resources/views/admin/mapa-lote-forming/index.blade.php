@@ -92,7 +92,7 @@
                 table: '#mapa-lote-forming',
                 fields: [
                     { label: "Mapa <font color=red>*</font>", name: "mapa_lote_formings.mapa_id", type: 'select' },
-                    { label: "Lote <font color=red>*</font>", name: "mapa_lote_formings.width",  attr: {type: 'number'}},
+                    { label: "Lote <font color=red>*</font>", name: "mapa_lote_formings.lote",  attr: {type: 'number'}},
                     { label: "Formando <font color=red>*</font>", name: "mapa_lote_formings.forming_id", type: 'select' },
                     { label: "Data Início <font color=red>*</font>", name: "mapa_lote_formings.data_inicio", type: 'datetime', format: 'DD/MM/YYYY H:mm', }
                 ]

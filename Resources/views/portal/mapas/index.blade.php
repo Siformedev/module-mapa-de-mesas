@@ -62,9 +62,9 @@
                                                     ];
                                                     $clocks[] = $clock;
                                                     ?>
-                                                    <div style="border: 2px dashed grey; padding: 15px; border-radius: 5px; text-align: center">
+                                                    <div style="border: 2px dashed grey; padding: 15px; border-radius: 5px; text-align: center" id="btn_finish_countdown_{{$clock['id']}}">
                                                         Sua mesa sera liberada para escolha dia <span class="label label-info">{{ \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $mesa['liberacao']['data_inicio'])->format('d/m/Y H:i')}}</span>
-                                                        <hr><span class="label label-success" style="display: block"> <div id="clock_{{$clock['id']}}"></div></span>
+                                                        <hr><span class="label label-success" style="display: block; font-size: 13px;"> <div id="clock_{{$clock['id']}}"></div></span>
                                                     </div>
                                                 @else
                                                     <div style="border: 2px dashed grey; padding: 15px; border-radius: 5px; text-align: center">Em breve será divulgado a data de liberação para escolha da sua mesa</div>
@@ -89,25 +89,25 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 
     <script>
+        let stuff;
+        let clock;
         $(function (){
             let clocks = [];
             @if(isset($clocks))
                 @foreach($clocks as $clock)
-                let stuff = '{!! json_encode($clock) !!}';
-                let clock = JSON.parse(stuff)
+                stuff = '{!! json_encode($clock) !!}';
+                clock = JSON.parse(stuff)
                 clocks.push(clock);
 
                 $('#clock_{{$clock['id']}}').countdown('{{$clock['date']}}', function(event) {
 
                     if(parseInt(event.offset.totalDays) > 0){
-                        var $this = $(this).html(event.strftime('Faltam: <b>%D Dia(s) %H Hora(s) %M Minuto(s) %S Segundo(s)<b>'));
+                        var $this = $(this).html(event.strftime('Faltam: <b>%D Dia(s) %H Hr(s) %M Min(s) %S Seg(s)<b>'));
                     }else{
-                        var $this = $(this).html(event.strftime('Faltam: <b>%H Hora(s) %M Minuto(s) %S Segundo(s)<b>'));
+                        var $this = $(this).html(event.strftime('Faltam: <b>%H Hr(s) %M Min(s) %S Seg(s)<b>'));
                     }
                 }).on('finish.countdown', function(event) {
-                    setTimeout(() => {
-                        document.location.reload(true);
-                    },  1000)
+                    $('#btn_finish_countdown_{{$clock['id']}}').html(`<a href="{{route('mapademesas.portal.mapa.escolher', ['mapa' => $mesa['mapa']['id'], 'produto' => $mesa['product']['id']])}}" class="btn btn-success btn-block">ESCOLHER</a>`);
 
                 });
 

@@ -44,7 +44,7 @@
                         <div class="panel-body">
                             <section class="panel">
                                 <div class="panel-body">
-                                    <div class="row">
+                                    <div class="row" style="overflow-x: auto;">
                                         <div class="col-sm-12 col-md-12 col-lg-12">
                                             <div style="width: {{$dataMapa['mapa']['imagem_x']}}px; height: {{$dataMapa['mapa']['imagem_y']}}px; margin: 10px auto; background: white; position: relative">
                                                 <img src="{{asset('uploads/mapa/' . $dataMapa['mapa']['imagem'])}}?rand={{rand((250*250), (1050*1050))}}" style="width: {{$dataMapa['mapa']['imagem_x']}}px; height: {{$dataMapa['mapa']['imagem_y']}}px;">
