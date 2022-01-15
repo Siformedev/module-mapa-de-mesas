@@ -39,13 +39,14 @@ class MapaController extends Controller
         $forming = auth()->user()->userable;
 
         $dataMapa = MapaServices::dadosFormandoMapa($forming, $produto, $mapa);
+        $formandoTotalMesas = MapaServices::formandoTotalMesas($forming);
         if(!$dataMapa['liberacaoStatus']){
             return redirect()->route('mapademesas.portal.mapas.index');
         }
 
         $mesas = MapaServices::dadosMesas($mapa);
-        
-        return view('mapademesas::portal.mapa-escolher.index', compact('dataMapa', 'mesas'));
+
+        return view('mapademesas::portal.mapa-escolher.index', compact('dataMapa', 'mesas', 'formandoTotalMesas'));
     }
 
 

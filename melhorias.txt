@@ -1,0 +1,1 @@
+[   ] Fazer algoritmo de escolhas de mesa interpretar o amount do fps * quantity do fps_category_type 

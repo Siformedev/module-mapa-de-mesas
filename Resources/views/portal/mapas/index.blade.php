@@ -43,6 +43,15 @@
                                             <span><b>Produto:</b> {{$mesa['product']['name']}} [#{{$mesa['product']['id']}}]</span><br>
                                             <span><b>Local:</b> {{$mesa['event']['address']}}</span><br>
                                             <span><b>Você possui {{$mesa['qtMesas']}} mesa (s). E já escolheu {{($mesa['escolhidas'] >= $mesa['qtMesas']) ? 'todas' : $mesa['escolhidas']}}</b> </span><br>
+                                           
+                                            @if(count($mesa['mesasEscolhidas']))
+                                                @if(count($mesa['mesasEscolhidas']) > 1)
+                                                    <span><b>Número(s) da(s) mesa(s) escolhida(s): {{implode(',', $mesa['mesasEscolhidas'])}}</b> </span><br>
+                                                @else
+                                                    <span><b>Número da mesa escolhida: {{implode(',', $mesa['mesasEscolhidas'])}}</b> </span><br>
+                                                @endif
+                                            @endif
+                                            
                                         </div>
                                         <div class="col-md-4" style="font-size: 16px;">
                                             @if($mesa['liberacaoStatus'])
@@ -63,7 +72,7 @@
                                                     $clocks[] = $clock;
                                                     ?>
                                                     <div style="border: 2px dashed grey; padding: 15px; border-radius: 5px; text-align: center" id="btn_finish_countdown_{{$clock['id']}}">
-                                                        Sua mesa sera liberada para escolha dia <span class="label label-info">{{ \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $mesa['liberacao']['data_inicio'])->format('d/m/Y H:i')}}</span>
+                                                        Sua mesa será liberada para escolha dia <span class="label label-info">{{ \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $mesa['liberacao']['data_inicio'])->format('d/m/Y H:i')}}</span>
                                                         <hr><span class="label label-success" style="display: block; font-size: 13px;"> <div id="clock_{{$clock['id']}}"></div></span>
                                                     </div>
                                                 @else

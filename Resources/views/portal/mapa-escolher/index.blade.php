@@ -1,6 +1,31 @@
 @extends('portal.inc.layout')
 
+@section('style')
+    <style>
+        .popover-title {
+            text-align:center;
+        }
+        .popover-content {
+            text-align: center !important;
+        }
+    </style>
+@endsection
+
 @section('content')
+
+    @php(
+        $qtdMesasNome = [
+            2 => 'Dupla - 20 Cadeiras',
+            3 => 'Tripla - 30 Cadeiras',
+            4 => 'Quádrupla - 40 Cadeiras',
+            5 => 'Quíntupla - 50 Cadeiras',
+            6 => 'Sêxtupla - 60 Cadeiras',
+            7 => 'Sétupla - 70 Cadeiras',
+            8 => 'Óctupla - 80 Cadeiras',
+            9 => 'Nônupla - 90 Cadeiras',
+            10 => 'Décupla - 100 Cadeiras',
+        ]
+    )
 
 
     <section class="page-content">
@@ -17,11 +42,18 @@
                             <span style="font-size: 24px; font-weight: bold; display: block"><a href="{{route('mapademesas.portal.mapas.index')}}" class="btn btn-default" style="margin: 0 20px 10px 0">VOLTAR</a> Escolha sua mesa</span>
                             <h5>{{$dataMapa['product']['name']}} (#{{$dataMapa['product']['id']}}) </h5>
                             <h6>Evento: {{$dataMapa['event']['name']}} - {{date("d/m/Y H:i", strtotime($dataMapa['event']['date']))}}</h6>
+                            @if(count($dataMapa['mesasEscolhidas']))
+                                @if(count($dataMapa['mesasEscolhidas']) > 1)
+                                    <h4>Número(s) da(s) mesa(s) escolhida(s): {{implode(',', $dataMapa['mesasEscolhidas'])}}</h4>
+                                @else
+                                    <h4>Número da mesa escolhida: {{implode(',', $dataMapa['mesasEscolhidas'])}}</h4>
+                                @endif
+                            @endif
                         </div>
                         <div class="col-md-7">
                             <div class="row">
                                 <div class="col-sm-12 col-md-4 col-lg-4" style="border-left: 4px solid green; height: 80px; font-size: 24px; font-weight: bold; padding-left: 10px;">
-                                    <span style="color: green">MESAS COMPRADAS</span> <br>
+                                    <span style="color: green">COMPRADAS</span> <br>
                                     {{$dataMapa['qtMesas']}}
                                 </div>
                                 <div class="col-sm-12 col-md-4 col-lg-4" style="border-left: 4px solid red; height: 80px; font-size: 24px; font-weight: bold; padding-left: 10px;">
@@ -29,7 +61,7 @@
                                     {{$dataMapa['escolhidas']}}
                                 </div>
                                 <div class="col-sm-12 col-md-4 col-lg-4" style="border-left: 4px solid orange; height: 80px; font-size: 24px; font-weight: bold; padding-left: 10px;">
-                                    <span style="color: orange"> DISPONÍVEL</span> <br>
+                                    <span style="color: orange">DISPONÍVEL</span> <br>
                                     {{$dataMapa['disponivel']}}
                                 </div>
                             </div>
@@ -50,6 +82,12 @@
                                                 <img src="{{asset('uploads/mapa/' . $dataMapa['mapa']['imagem'])}}?rand={{rand((250*250), (1050*1050))}}" style="width: {{$dataMapa['mapa']['imagem_x']}}px; height: {{$dataMapa['mapa']['imagem_y']}}px;">
                                                 @foreach($mesas as $mesa)
                                                     <?php
+                                                    
+                                                    $complementoMesa = '';
+                                                    if($mesa['mesa']['config']['qtd_mesa'] > 1){
+                                                        $complementoMesa = "<br> (Mesa {$qtdMesasNome[$mesa['mesa']['config']['qtd_mesa']]})";
+                                                    }
+
                                                     $popover_title = '';
                                                     $popover_content = '';
                                                     $popover = '';
@@ -57,8 +95,12 @@
 
                                                     if($mesa['escolhida'] && count($mesa['escolhas']) > 0){
                                                         $popover = "popover";
+                                                        $arrEscolas = [];
                                                         foreach ($mesa['escolhas'] as $escolha){
-                                                            $popover_title.= "{$escolha['nome']} {$escolha['sobrenome']} <br>";
+
+                                                            if(in_array($escolha['id'], $arrEscolas)) continue;
+                                                            $arrEscolas[] = $escolha['id'];
+                                                            $popover_title.= "{$escolha['nome']} {$escolha['sobrenome']} {$complementoMesa} <br>";
                                                             $popover_content.= "<img src=\" ".asset($escolha['img'])." \" style=\"width: 80px;\" > ";
                                                         }
                                                     }elseif ($mesa['mesa']['bloqueada'] == 1){
@@ -66,15 +108,18 @@
                                                         $popover_title.= "Não disponível";
                                                     } else {
                                                         $popover = "popover";
-                                                        $popover_title.= "LIVRE";
+                                                        $popover_title.= "LIVRE {$complementoMesa}";
                                                         $functionReservar = "reservarMesa({$mesa['mesa']['id']})";
+                                                        $popover_content.= "Clique para escolher";
                                                     }
                                                     ?>
                                                     <div
                                                             onclick="{{$functionReservar}}"
                                                             data-toggle="{{$popover}}"
                                                             data-title="{{$popover_title}}"
+                                                            @if(!empty($popover_content))
                                                             data-content="{{$popover_content}}"
+                                                            @endif
                                                             style="position: absolute;
                                                                     cursor: pointer;
                                                                     border: 2px {{$mesa['config']['color']}} solid;
@@ -104,7 +149,8 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 
     <script>
-        var mesasDisponiveis = {{$dataMapa['disponivel']}}
+        var mesasDisponiveis = {{$dataMapa['disponivel']}};
+        var formandoTotalMesasDisponivel = {{$formandoTotalMesas['disponivel']}};
 
         $(function () {
             $('[data-toggle="popover"]').popover({
@@ -114,11 +160,11 @@
             })
         })
 
-        function reservarMesa(id){
+        function reservarMesa(id, repeat = false){
             if(mesasDisponiveis <= 0){
                 Swal.fire(
-                    'Erro',
-                    'Você já reservou todas as suas mesas disponíveis',
+                    'Atenção',
+                    'Você já reservou todas as suas mesas disponíveis para esta compra. Caso tenha adquirido outros pacotes de mesa extra que não escolheu ainda, retorne ao menu anterior, e acesse ele para novas escolhas',
                     'error'
                 )
                 return false;
@@ -136,7 +182,9 @@
             }).then((result) => {
                 if (result.value) {
 
-                    fetch(`escolher/mesa/${id}`,{
+                    const rrepeat = (repeat) ? 1 : 0;
+
+                    fetch(`escolher/mesa/${id}?repeat=${rrepeat}`,{
                         method: 'POST',
                         headers: {
                             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -146,13 +194,34 @@
                     .then(data => {
                         if(data){
                             if(data.success){
-                                Swal.fire(
-                                    'Parabéns!',
-                                    data.msg,
-                                    'success'
-                                ).then(() => {
-                                    document.location.reload(true);
-                                })
+                                if(data.repeat){
+
+                                    Swal.fire({
+                                        title: 'Atenção!',
+                                        text: data.msg,
+                                        icon: 'info',
+                                        showDenyButton: true,
+                                        showCancelButton: true,
+                                        confirmButtonText: 'Confirmo',
+                                        denyButtonText: `Cancelar`,
+                                    }).then((result) => {
+                                        /* Read more about isConfirmed, isDenied below */
+                                        if (result.isConfirmed) {
+                                            reservarMesa(id, true)
+                                        }
+                                    })
+
+                                }else{
+                                    Swal.fire(
+                                        'Parabéns!',
+                                        data.msg,
+                                        'success'
+                                    ).then(() => {
+                                        document.location.reload(true);
+                                    })
+                                }
+                                
+                                
                             }else{
                                 Swal.fire(
                                     'Erro',

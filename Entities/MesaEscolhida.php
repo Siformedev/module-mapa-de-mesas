@@ -25,4 +25,9 @@ class MesaEscolhida extends Model
     {
         return $this->belongsTo(Forming::class, 'forming_id', 'id');
     }
+
+    public function mesa()
+    {
+        return $this->belongsTo(Mesa::class, 'mesa_id', 'id');
+    }
 }

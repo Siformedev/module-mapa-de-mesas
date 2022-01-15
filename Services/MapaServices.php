@@ -47,8 +47,13 @@ class MapaServices
 
                                 if($liberacao instanceof MapaLoteForming) $lib = $liberacao->toArray();
 
-                                $qtMesas = $mesa->sum('quantity');
+                                $qtMesas = $mesa->sum('quantity') * $product->amount;
                                 $disponivel = $qtMesas - $escolhidas->count();
+                                $escolhidax = $escolhidas->get();
+                                $mEscolhidas = [];
+                                foreach ($escolhidax as $e){
+                                $mEscolhidas[] = $e->mesa->numero;
+                                }
                                 if(count($mesa) > 0){
                                     $dataMesas[] = [
                                         'product' => $product->toArray(),
@@ -57,6 +62,7 @@ class MapaServices
                                         'mesas' => $mesa->toArray(),
                                         'qtMesas' => $qtMesas,
                                         'escolhidas' => $escolhidas->count(),
+                                        'mesasEscolhidas' => $mEscolhidas,
                                         'disponivel' => $disponivel,
                                         'liberacao' => @$lib,
                                         'liberacaoStatus' => self::verificaLiberacao($liberacao)
@@ -99,8 +105,13 @@ class MapaServices
 
                             if($liberacao instanceof MapaLoteForming) $lib = $liberacao->toArray();
 
-                            $qtMesas = $mesa->sum('quantity');
+                            $qtMesas = $mesa->sum('quantity') * $product->amount;
                             $disponivel = $qtMesas - $escolhidas->count();
+                            $escolhidax = $escolhidas->get();
+                            $mEscolhidas = [];
+                            foreach ($escolhidax as $e){
+                               $mEscolhidas[] = $e->mesa->numero;
+                            }
                             if(count($mesa) > 0){
                                 $dataMesas = [
                                     'product' => $product->toArray(),
@@ -109,6 +120,7 @@ class MapaServices
                                     'mesas' => $mesa->toArray(),
                                     'qtMesas' => $qtMesas,
                                     'escolhidas' => $escolhidas->count(),
+                                    'mesasEscolhidas' => $mEscolhidas,
                                     'disponivel' => $disponivel,
                                     'liberacao' => @$lib,
                                     'liberacaoStatus' => self::verificaLiberacao($liberacao)
@@ -171,6 +183,102 @@ class MapaServices
             return $dateNow->greaterThanOrEqualTo($liberacaoLote);
         }
         return false;
+    }
+
+    public static function formandoTotalMesas($forming)
+    {
+
+        $dataMesas = [];
+
+        foreach($forming->products as $product){
+
+            if($product->status != 1) continue;
+
+            if($product->events_ids != 0){
+                $events = explode(',', $product->events_ids);
+                foreach ($events as $event){
+
+                    $event = Event::find($event);
+                    if($event){
+                        $mapas = Mapas::active()->where('event_id', $event->id)->where('data_inicio', '<=', date('Y-m-d H:i:s'))->get();
+                        if(count($mapas) > 0){
+                            foreach ($mapas as $mapa){
+
+                                $mesa = FormandoProdutosEServicosCateriasTipos::where('fps_id', $product->id)->where('category_id', 2)->where('quantity', '>', 0)->get();
+                                $escolhidas = MesaEscolhida::active()
+                                    ->where('mapa_id', $mapa->id)
+                                    ->where('event_id', $event->id)
+                                    ->where('fps_id', $product->id)
+                                    ->where('forming_id', $forming->id);
+
+                                $liberacao = MapaLoteForming::where('forming_id', $forming->id)->where('mapa_id', $mapa->id)->first();
+
+                                if($liberacao instanceof MapaLoteForming) $lib = $liberacao->toArray();
+
+                                $qtMesas = $mesa->sum('quantity') * $product->amount;
+                                $disponivel = $qtMesas - $escolhidas->count();
+                                if(count($mesa) > 0){
+                                    @$dataMesas['qtMesas']+= $qtMesas;
+                                    @$dataMesas['escolhidas']+= $escolhidas->count();
+                                    @$dataMesas['disponivel']+= $disponivel;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return $dataMesas;
+    }
+
+    public static function formandoSelecionaMesasFpsId($forming)
+    {
+
+        $dataMesas = [];
+
+        foreach($forming->products as $product){
+
+            if($product->status != 1) continue;
+
+            if($product->events_ids != 0){
+                $events = explode(',', $product->events_ids);
+                foreach ($events as $event){
+
+                    $event = Event::find($event);
+                    if($event){
+                        $mapas = Mapas::active()->where('event_id', $event->id)->where('data_inicio', '<=', date('Y-m-d H:i:s'))->get();
+                        if(count($mapas) > 0){
+                            foreach ($mapas as $mapa){
+
+                                $mesa = FormandoProdutosEServicosCateriasTipos::where('fps_id', $product->id)->where('category_id', 2)->where('quantity', '>', 0)->get();
+                                $escolhidas = MesaEscolhida::active()
+                                    ->where('mapa_id', $mapa->id)
+                                    ->where('event_id', $event->id)
+                                    ->where('fps_id', $product->id)
+                                    ->where('forming_id', $forming->id);
+
+                                $liberacao = MapaLoteForming::where('forming_id', $forming->id)->where('mapa_id', $mapa->id)->first();
+
+                                if($liberacao instanceof MapaLoteForming) $lib = $liberacao->toArray();
+
+                                $qtMesas = $mesa->sum('quantity') * $product->amount;
+                                $disponivel = $qtMesas - $escolhidas->count();
+                                if(count($mesa) > 0){
+                                    if($disponivel > 0){
+                                        for($ii=1;$ii<=$disponivel;$ii++){
+                                            @$dataMesas['fps_id'][] = $product->id;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return $dataMesas;
     }
 
 }

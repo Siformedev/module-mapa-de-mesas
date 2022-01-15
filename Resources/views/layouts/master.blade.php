@@ -40,6 +40,8 @@
 <!-- Clean UI Styles -->
 <link rel="stylesheet" type="text/css" href="{{ asset('assets/common/css/source/main.css') }}">
 
+@yield('style')
+
 <!-- Vendors Scripts -->
 <!-- v1.0.0 -->
 <script src="{{ asset('assets/vendors/jquery/jquery.min.js') }}"></script>
