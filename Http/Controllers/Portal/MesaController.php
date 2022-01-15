@@ -134,10 +134,10 @@ class MesaController extends Controller
                     
                 }
 
-                if(count($arrFpsRet) < $qtdParaEscolha){
+                if(count($arrFpsRet) < $mesa->config->qtd_mesa){
                     $resp = [
                         'success' => false,
-                        'msg' => "Esta mesa precisa utilizar {$mesa->config->qtd_mesa} mesas para escolha e você só possui {$formandoTotalMesas['disponivel']} disponível, favor escolha outra mesa!"
+                        'msg' => "Constam pagamentos em abertos em uma das suas mesas que seria utilizado na soma para essa escolha, favor entre em contato com o Atendimento!"
                     ];
                     return $resp;
                 }
