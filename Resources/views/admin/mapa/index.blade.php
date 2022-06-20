@@ -42,7 +42,6 @@
                                     <tr>
                                         <th>#</th>
                                         <th>Nome</th>
-                                        <th>Contrato</th>
                                         <th>Evento</th>
                                         <th>Data Inicio</th>
                                         <th>Data Fim</th>
@@ -114,10 +113,9 @@
                 table: '#example',
                 fields: [
                     { label: "Nome <font color=red>*</font>", name: "mapas.nome" },
-                    { label: "Contrato <font color=red>*</font>", name: "mapas.contract_id", type: "select" },
                     { label: "Evento <font color=red>*</font>", name: "mapas.event_id", type: "select" },
-                    { label: "Data Início <font color=red>*</font>", name: "mapas.data_inicio", type: 'datetime', format: 'DD/MM/YYYY H:mm', },
-                    { label: "Data Fim <font color=red>*</font>", name: "mapas.data_fim", type: 'datetime', format: 'DD/MM/YYYY H:mm', },
+                    { label: "Data Início Liberação <font color=red>*</font>", name: "mapas.data_inicio", type: 'datetime', format: 'DD/MM/YYYY H:mm', },
+                    { label: "Data Fim Liberação <font color=red>*</font>", name: "mapas.data_fim", type: 'datetime', format: 'DD/MM/YYYY H:mm', },
                     {
                         label: "Status",
                         name: "mapas.status",
@@ -191,7 +189,6 @@
                             return `<a href="mapa/${row.mapas.id}/manutencao" class="btn btn-info btn-m"><i class="glyphicon glyphicon-wrench"></i></a>`;
                     } },
                     { data: "mapas.nome" },
-                    { data: "contracts.name" },
                     { data: "events.name" },
                     { data: "mapas.data_inicio" },
                     { data: "mapas.data_fim" },

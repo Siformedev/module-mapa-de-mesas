@@ -34,12 +34,6 @@ class MapaController extends Controller
         Editor::inst( $this->db, 'mapas', 'id' )
             ->fields(
                 Field::inst( 'mapas.id' ),
-                Field::inst( 'mapas.contract_id' )
-                    ->options( Options::inst()
-                        ->table( 'contracts' )
-                        ->value( 'id' )
-                        ->label( 'name' )
-                    )->Validator(Validate::notEmpty()),
                 Field::inst( 'mapas.event_id' )
                     ->options( Options::inst()
                         ->table( 'events' )
@@ -61,7 +55,6 @@ class MapaController extends Controller
                     ->Validator(Validate::boolean()),
 
                 /* LEFT JOIN  */
-                Field::inst( 'contracts.name' ),
                 Field::inst( 'events.name' )
             )
             ->where(function ($q) use ($contract_id){
@@ -70,7 +63,6 @@ class MapaController extends Controller
                 }
 
             })
-            ->leftJoin('contracts', 'contracts.id', '=', 'mapas.contract_id')
             ->leftJoin('events', 'events.id', '=', 'mapas.event_id')
             ->process( $_POST )
             ->json();
